@@ -3,10 +3,12 @@ package org.example;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.CooperativeStickyAssignor;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -26,7 +28,6 @@ public class Main {
     properties.setProperty("key.deserializer", StringDeserializer.class.getName());
     properties.setProperty("value.deserializer", StringDeserializer.class.getName());
     properties.setProperty("group.id", "test-group");
-    properties.setProperty("partition.assignment.strategy", CooperativeStickyAssignor.class.getName());
 
     //none - offset이 없을 경우 error
     //earliest - offset이 없을 경우 가장 처음부터
@@ -38,7 +39,7 @@ public class Main {
     KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
     // topic 구독
-    consumer.subscribe(Arrays.asList("pa_topic"));
+    consumer.subscribe(Arrays.asList("partitions_topic"));
 
     // 현재 Thread 얻기
     Thread mainThread = Thread.currentThread();
